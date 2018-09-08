@@ -1,0 +1,31 @@
+---
+title: "Shark Attack Analysis"
+author: "Subhrajyoty Roy"
+date: "8 September 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Areas of Shark Attack
+
+```{r}
+library(leaflet)
+sharkdata = read.csv('LocationData.csv', stringsAsFactors = FALSE)
+
+index <- which(sharkdata$Country == "USA")
+sharksubdata <- sharkdata[index,c(5,9,11,12)]
+sharksubdata$label <- paste(sharkdata[index,8],sharkdata[index,7],sharkdata[index,6], sep = ', ')
+
+
+map <- leaflet(sharksubdata) %>% addTiles() %>%
+       addMarkers(lat = ~Latitude, lng = ~Longitude, popup = ~label,
+                  label = ~Type, clusterOptions = markerClusterOptions())
+map
+```
+
+## Source
+
+  The data is collected from http://www.sharkattackdata.com/ and http://www.sharkattackfile.net/ .
