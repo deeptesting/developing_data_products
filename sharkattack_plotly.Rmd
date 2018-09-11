@@ -1,0 +1,72 @@
+---
+title: "Shark Attack Data Analysis"
+author: "Subhrajyoty Roy"
+date: "11 September 2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+
+## Introduction
+
+  This dataset concerns with some exploratory analysis of shark attacks in worldwide basis. The data is collected from the following websites;
+- http://www.sharkattackdata.com/ and 
+- http://www.sharkattackfile.net/ .
+  
+```{r message=FALSE}
+library(plotly)
+```
+  
+## Time Series Plot of Shark Attacks
+
+```{r warning=FALSE, message=FALSE}
+sharkdata = read.csv('LocationData.csv', stringsAsFactors = FALSE)
+sharkdata <- sharkdata[which(as.numeric(sharkdata$Year) %in% c(1543:2018)),]
+sharkdata[which(sharkdata$Type %in% c("Boatomg", "Boating")),]$Type = "Boat"
+sharkdata[which(sharkdata$Type %in% c("NULL", "Invalid")),]$Type = "Questionable"
+sharkdata$Year <- as.numeric(sharkdata$Year)
+
+years <- 1543:2018
+t <- table(sharkdata$Year)
+AttackCounts <- ifelse(is.na(t[as.character(years)]), 0, t[as.character(years)]) 
+
+
+plot_ly(x = ~years, y = ~AttackCounts, mode = 'lines', text = paste("Year", years))
+
+```
+
+## Types of Shark Attacks
+
+```{r}
+t <- table(sharkdata$Type)
+plot_ly(x = ~names(t), y = ~t, type = 'bar', text = names(t), 
+        marker = list(color = c('rrgba(222,45,38,0.8)', 'rgba(255,0,0,1)',
+                                'rgba(204,204,204,1)', 'rgba(0,0,150,1)',
+                                'rgba(0,0,0,1)','rgba(0,200,150,1)'))) %>%
+        layout(title = "Barplot of Different Types of Shark Attacks",
+         xaxis = list(title = "Types"),
+         yaxis = list(title = "Attack Counts"))
+
+```
+
+# THANK YOU
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
